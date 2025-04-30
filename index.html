@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #qr-reader {
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        #result-container {
+            margin-top: 20px;
+        }
+
+        #qr-result {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <div id="qr-reader"></div>
+    <div id="result-container">
+        <label for="qr-result">Scanned Text:</label><br>
+        <textarea id="qr-result" rows="4" readonly></textarea>
+    </div>
+
+    <script>
+        const qrCodeReader = new Html5Qrcode("qr-reader");
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Populate the text box with the scanned QR code text
+            document.getElementById("qr-result").value = decodedText;
+
+            // Stop scanning after successful detection
+            qrCodeReader.stop().catch(err => console.error("Error stopping QR reader:", err));
+        }
+
+        function onScanError(errorMessage) {
+            // Handle scan errors or ignore them
+            console.warn("QR code scan error:", errorMessage);
+        }
+
+        // Start QR code scanning
+        qrCodeReader.start(
+            { facingMode: "environment" }, // Use the rear camera
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            },
+            onScanSuccess,
+            onScanError
+        ).catch(err => {
+            console.error("Error starting QR reader:", err);
+        });
+    </script>
+</body>
+</html>
