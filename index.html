@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
+    <title>QR Code Reader</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,9 +31,11 @@
         }
         #qr-code-reader {
             width: 100%;
+            height: 400px; /* Make the camera container visible */
             max-width: 400px;
-            height: auto;
             display: none;
+            border: 2px solid #ddd;
+            border-radius: 8px;
         }
         #qr-result {
             margin-top: 20px;
@@ -44,6 +46,7 @@
             border: 2px solid #ddd;
             border-radius: 8px;
             text-align: center;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -51,7 +54,10 @@
     <button class="btn" onclick="startScanner()">Open Camera & Scan QR Code</button>
 
     <div id="qr-code-reader"></div>
-    <input type="text" id="qr-result" readonly placeholder="QR Code Result will appear here">
+    <div>
+        <label for="qr-result">QR Code Result:</label>
+        <input type="text" id="qr-result" readonly placeholder="QR Code Result will appear here">
+    </div>
 
     <!-- Include the html5-qrcode library -->
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
@@ -61,25 +67,25 @@
             const qrCodeReader = document.getElementById('qr-code-reader');
             const qrResult = document.getElementById('qr-result');
             
-            // Make the camera container visible
+            // Show the camera view container
             qrCodeReader.style.display = 'block';
 
             // Create a QRCodeScanner instance
             const qrCodeScanner = new Html5QrcodeScanner("qr-code-reader", {
-                fps: 10, // Frames per second for camera scanning
+                fps: 10, // Frames per second for scanning
                 qrbox: 250, // Size of the QR code scanning box
             });
 
-            // Start scanning and capture QR code
+            // Start the QR code scanning
             qrCodeScanner.render(
                 function(decodedText, decodedResult) {
-                    // When QR code is decoded, display the result in the input field
+                    // When QR code is successfully decoded, display the result in the input field
                     qrResult.value = decodedText;
                     qrCodeScanner.clear(); // Stop scanning after success
-                    qrCodeReader.style.display = 'none'; // Hide the camera view after scanning
+                    qrCodeReader.style.display = 'none'; // Hide camera view after scanning
                 },
                 function(errorMessage) {
-                    // Handle errors (e.g., camera permission denied)
+                    // Handle scanning errors (e.g., no QR code detected)
                     console.warn("QR Code scanning error: ", errorMessage);
                 }
             );
