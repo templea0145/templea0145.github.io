@@ -39,26 +39,26 @@
   
   <ul id="qr-code-list"></ul>
 
-  <!-- Include the html5-qrcode library -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <!-- Use the minified version of the html5-qrcode library -->
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 
   <script>
     let scannedData = [];
 
     document.getElementById("start-scan").addEventListener("click", function() {
-      // Toggle visibility of camera scanner
+      // Toggle visibility of the camera scanner
       const qrReader = document.getElementById("qr-reader");
-      qrReader.style.display = "block";
+      qrReader.style.display = "block"; // Show the video element
 
-      // Initialize QR code scanner
+      // Initialize the QR code scanner
       const html5QrCode = new Html5Qrcode("qr-reader");
 
       // Start the camera
       html5QrCode.start(
-        { facingMode: "environment" },  // Use rear camera
+        { facingMode: "environment" },  // Use the rear camera
         {
-          fps: 10, // frames per second
-          qrbox: 250 // size of the scanning box
+          fps: 10, // Frames per second
+          qrbox: 250 // Size of the scanning box
         },
         (decodedText, decodedResult) => {
           // Push the scanned QR code text into the list
@@ -78,7 +78,8 @@
           });
         },
         (errorMessage) => {
-          // Handle any errors, if necessary
+          // Handle scanning errors here
+          console.error(errorMessage);
         }
       ).catch(err => {
         console.error("Error starting QR scanner: ", err);
